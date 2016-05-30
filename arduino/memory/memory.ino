@@ -55,3 +55,18 @@ void LED(int LedId){
   delay(2000);
   digitalWrite(LedId,LOW);
   }
+
+  void WinGame(){
+    for(int i =0; i <30; i++){
+          digitalWrite(LEDred,HIGH);
+    digitalWrite(LEDgreen ,HIGH);
+      digitalWrite(LEDyellow,HIGH);
+        digitalWrite(LEDblue,HIGH);
+         delay(500);
+             digitalWrite(LEDred,LOW);
+    digitalWrite(LEDgreen ,LOW);
+      digitalWrite(LEDyellow,LOW);
+        digitalWrite(LEDblue,LOW);
+      }
+    }
+  
