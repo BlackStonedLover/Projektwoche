@@ -2,6 +2,30 @@
 
 import processing.serial.*;
 
+class Led {
+  int x;
+  int y = 50;
+  int Radius = 50;
+  int r, g, b;
+
+  Led( int x, int r, int g, int b) {
+    this.r= r;
+    this.g = g;
+    this.b = b;
+    this.x = x;
+  }
+
+  void zeichnen() {
+    fill(r, g, b);
+    ellipse(x, y, Radius, Radius);
+    fill(255);
+  }
+  void reset() {
+    fill(255);
+    ellipse(x, y, Radius, Radius);
+  }
+}
+
 // The serial port:
 Serial myPort;       
 
