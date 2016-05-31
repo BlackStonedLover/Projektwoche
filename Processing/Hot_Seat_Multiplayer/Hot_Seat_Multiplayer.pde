@@ -60,6 +60,8 @@ void draw() {
 
 int a;
 int [] anzSpieler = new int [a];
+int aktPlayer;
+
 void mousePressed() {
 
   int yMouse = 25;
@@ -119,8 +121,7 @@ void mousePressed() {
 void lostGame ( boolean lost) {
   if (lost) {
     for (int i = 0; i <= anzSpieler.length; i++)
-    anzSpieler[a] = anzSpieler[a++];
-
+    aktPlayer = anzSpieler[i];
   }
 }
 
@@ -144,6 +145,17 @@ void getLed(int ledId) {
     println("Error: 1337!");
   }
 }
+long randomNumber;
+int [] lightsToKlick = new int [10];
+
+
+  void getRndNo(){
+   println("Folgende Folge wurde generiert:");
+   for (int i = 0; i < 10; i++){
+     lightsToKlick[i] = int(random(3));
+     
+   }
+  }
 
 
 
