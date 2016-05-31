@@ -63,8 +63,6 @@ void setup() {
 
 void loop() {
 
-
-    
 }
 
 
@@ -136,6 +134,7 @@ void displayLights(){
                           TonHigh = 2093;
                           //Serial.println("Blau wurde gedrückt.");
                           LED(LEDblue);
+                          Serial.println("Blue pressed");
                               //Ruft Methode auf um die richtigkeit zu überprüfen.
                               if(checkForGameover(Counter,0)){
                                   LoseGame();
