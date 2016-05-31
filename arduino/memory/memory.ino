@@ -28,7 +28,7 @@ int Tyellow=8;
 /**
  * Speaker Output
  */
-int speakerOut = 1;
+int speakerOut = 11;
 
 /**
  * Tonhöhe init.
@@ -56,12 +56,14 @@ void setup() {
   pinMode(Tgreen,INPUT);
   pinMode(Tyellow,INPUT);
   pinMode(speakerOut, OUTPUT);
+
+
+  getRndNo();
 }
 
 void loop() {
 
-// Das Programm starten
-getRndNo();
+
     
 }
 
@@ -72,8 +74,8 @@ getRndNo();
 void getRndNo(){
   Serial.println("Folgende Folge wurde generiert:");
   for(int i =0; i<10;i++){
-    lightsToKlick[i] = random(3);
-          Serial.println(lightsToKlick[i]);
+    lightsToKlick[i] = random(0,4);
+    Serial.println(lightsToKlick[i]);
     }
 
     // Gehe im Programm weiter
@@ -93,15 +95,19 @@ void displayLights(){
   for(int i =0; i < 10; i++){
     switch(lightsToKlick[i]){
         case 0:
+        Serial.println("Blau");
         LED(LEDblue);
         break;
         case 1:
+        Serial.println("Rot");
         LED(LEDred);
         break;
         case 2:
+        Serial.println("Grün");
         LED(LEDgreen);
         break;
         case 3:
+        Serial.println("Gelb");
         LED(LEDyellow);
         break;
         default:
@@ -128,7 +134,7 @@ void displayLights(){
           
                     if(digitalRead(Tblue) == HIGH){ // Blau wird überprüft
                           TonHigh = 2093;
-                          Serial.println("Blau wurde gedrückt.");
+                          //Serial.println("Blau wurde gedrückt.");
                           LED(LEDblue);
                               //Ruft Methode auf um die richtigkeit zu überprüfen.
                               if(checkForGameover(Counter,0)){
@@ -138,7 +144,7 @@ void displayLights(){
                        }
                       if (digitalRead(Tred)==HIGH){ // Rot wird überprüft
                           TonHigh = 175;
-                          Serial.println("Rot wurde gedrückt");
+                          //Serial.println("Rot wurde gedrückt");
                           LED(LEDred);
                               //Ruft Methode auf um die richtigkeit zu überprüfen.
                               if(checkForGameover(Counter,1)){
@@ -148,7 +154,7 @@ void displayLights(){
                         }
                        if(digitalRead(Tgreen)==HIGH){ // Grün wird überprüft
                           TonHigh = 4978;
-                          Serial.println("Grün wurde gedrückt");
+                          //Serial.println("Grün wurde gedrückt");
                             LED(LEDgreen);
                                   //Ruft Methode auf um die richtigkeit zu überprüfen.
                                   if(checkForGameover(Counter,2)){
@@ -159,7 +165,7 @@ void displayLights(){
                   
                        if(digitalRead(Tyellow)==HIGH){ //Gelb wird überprüft
                           TonHigh = 3520;
-                          Serial.println("Geld wurde Gedrückt");
+                          //Serial.println("Geld wurde Gedrückt");
                           LED(LEDyellow);
                                 //Ruft Methode auf um die richtigkeit zu überprüfen.
                                 if(checkForGameover(Counter,3)){
@@ -168,6 +174,7 @@ void displayLights(){
                            Counter++;
                         }
               }
+      if(checkForGameover(Counter,4))
       WinGame();
       
     }
@@ -185,12 +192,14 @@ void displayLights(){
       return false;
       }
 
+
 /**
  * Diese Methode lässt eine LED aufleuchten mit einem Ton und  erlöscht diese wieder aufgrund der Übergebenen ID
  */
 void LED(int LedId){
-  Serial.println("LED mit der ID leuchtet");
-    Serial.println(LedId);
+
+  //Serial.println("LED mit der ID leuchtet");
+  //Serial.println(LedId);
   digitalWrite(LedId,HIGH);
   tone(speakerOut,TonHigh);
   delay(100);
