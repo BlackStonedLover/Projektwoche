@@ -1,0 +1,214 @@
+ #include "pitches.h"
+
+/*
+Arrays:
+int * bezeichner = (int*)malloc(sizeof(int)*groesse);
+*/
+// Variablen deffinition LED 4 Farben + Taster 4x
+int LEDblue= 9;
+int LEDred=2;
+int LEDgreen=4;
+int LEDyellow=6;
+int Tblue=10;
+int Tred=3;
+int Tgreen=5;
+int Tyellow=8;
+int speakerOut = 1;
+int TonHigh=0;
+bool WinMelody = true;
+long randomNumber;
+int lightsToKlick[10];
+
+int melody[] = {
+  NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4
+};
+
+// note durations: 4 = quarter note, 8 = eighth note, etc.:
+int noteDurations[] = {
+  4, 8, 8, 4, 4, 4, 4, 4
+};
+
+void setup() {
+  Serial.begin(9600);
+   // Serial.begin(9600); // Set serial out if we want debugging
+  // put your setup code here, to run once:
+  pinMode(LEDblue,OUTPUT);
+  pinMode(LEDred, OUTPUT);
+  pinMode(LEDgreen, OUTPUT);
+  pinMode(LEDyellow, OUTPUT);
+  pinMode(Tblue,INPUT);
+  pinMode(Tred,INPUT);
+  pinMode(Tgreen,INPUT);
+  pinMode(Tyellow,INPUT);
+  pinMode(speakerOut, OUTPUT);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  //LoseGame();
+//WinGame();
+testTaster();
+    
+}
+void getRndNo(){
+//  randomNumber = random(3);
+  for(int i =0; i<9;i++){
+    lightsToKlick[i] = random(3);
+          Serial.println(lightsToKlick[i]);
+    }
+    displayLights();
+  }
+
+void displayLights(){
+  for(int i =0; i < 9; i++){
+    switch(lightsToKlick[i]){
+        case 0:
+        LED(LEDblue);
+        break;
+        case 1:
+        LED(LEDred);
+        break;
+        case 2:
+        LED(LEDgreen);
+        break;
+        case 3:
+        LED(LEDyellow);
+        break;
+        default:
+        Serial.println("Error");
+      }
+    
+    }
+  }
+  void userInput(){
+    int Counter=0;
+    while(Counter <9){
+      if(digitalRead(Tblue) == HIGH){
+      TonHigh = 2093;
+      Serial.println("blue");
+      LED(LEDblue);
+            if(checkForGameover(Counter,0)){
+        LoseGame();
+        }
+    }
+      if (digitalRead(Tred)==HIGH){
+      TonHigh = 175;
+      Serial.println("red");
+      LED(LEDred);
+      if(checkForGameover(Counter,1)){
+        LoseGame();
+        }
+      }
+       if(digitalRead(Tgreen)==HIGH){
+        TonHigh = 4978;
+        Serial.println("green");
+          LED(LEDgreen);
+                if(checkForGameover(Counter,2)){
+        LoseGame();
+        }
+        }
+         if(digitalRead(Tyellow)==HIGH){
+          TonHigh = 3520;
+          Serial.println("yellow");
+          LED(LEDyellow);
+                if(checkForGameover(Counter,3)){
+        LoseGame();
+        }
+          
+          }
+      }
+      WinGame();
+      
+    }
+
+    bool checkForGameover(int aktIndex, int LED){
+      if(lightsToKlick[aktIndex] != LED)
+      return true;
+
+      return false;
+      }
+
+void testTaster(){
+    if(digitalRead(Tblue) == HIGH){
+      TonHigh = 2093;
+      Serial.println("blue");
+      LED(LEDblue);
+    }
+      if (digitalRead(Tred)==HIGH){
+      TonHigh = 175;
+      Serial.println("red");
+      LED(LEDred);
+      }
+       if(digitalRead(Tgreen)==HIGH){
+        TonHigh = 4978;
+        Serial.println("green");
+          LED(LEDgreen);
+        }
+         if(digitalRead(Tyellow)==HIGH){
+          TonHigh = 3520;
+          Serial.println("yellow");
+          LED(LEDyellow);
+          
+          }
+  }
+
+void LED(int LedId){
+  Serial.println("LED leuchtet");
+  digitalWrite(LedId,HIGH);
+  tone(speakerOut,TonHigh);
+  delay(100);
+  noTone(speakerOut);
+  delay(1000);
+  digitalWrite(LedId,LOW);
+  }
+
+void LoseGame(){
+    Serial.println("Lose Game");
+        for(int i =0; i <30; i++){
+  digitalWrite(LEDred,HIGH);
+  delay(1000);
+  digitalWrite(LEDred,LOW);
+  delay(1000);
+        }
+       // break;
+  }
+  void WinGame(){
+      Serial.println("Win Game");
+      PlaySoundDaDa();
+    for(int i =0; i <30; i++){
+       digitalWrite(LEDred,HIGH);
+       digitalWrite(LEDgreen ,LOW);
+      digitalWrite(LEDyellow,LOW);
+
+        digitalWrite(LEDblue,HIGH);
+          tone(speakerOut,100);
+  delay(100);
+  noTone(speakerOut);
+    tone(speakerOut,500);
+  delay(100);
+  noTone(speakerOut);
+         delay(100);
+             digitalWrite(LEDred,LOW);
+    digitalWrite(LEDgreen ,HIGH);
+      digitalWrite(LEDyellow,HIGH);
+        digitalWrite(LEDblue,LOW);
+        delay(300);
+      }
+    }
+    void PlaySoundDaDa(){
+        for (int thisNote = 0; thisNote < 8; thisNote++) {
+
+    // to calculate the note duration, take one second
+    // divided by the note type.
+    //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
+    int noteDuration = 1000 / noteDurations[thisNote];
+    tone(8, melody[thisNote], noteDuration);
+
+    // to distinguish the notes, set a minimum time between them.
+    // the note's duration + 30% seems to work well:
+    int pauseBetweenNotes = noteDuration * 1.30;
+    delay(pauseBetweenNotes);
+    // stop the tone playing:
+    noTone(8);
+  }
+      }
