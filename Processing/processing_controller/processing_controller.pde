@@ -2,6 +2,8 @@
 import g4p_controls.*;
 import processing.serial.*;
 Serial myPort;
+// Klasse erstellt um LED´s mit bestimmter Farbe zu zeichnen. Hier wird in Farbe 
+// gezeichnet und dann wieder resetet.
 class Led {
   int x;
   int y = 50;
@@ -26,7 +28,7 @@ class Led {
   }
 }
 
-
+// Anlegen der neuen LED´s 
 Led ledBlue = new Led(50, 0, 0, 255);
 Led ledYellow = new Led (110, 255, 255, 0);
 Led ledGreen = new Led (170, 0, 255, 0);
@@ -47,9 +49,8 @@ public void setup() {
   ledYellow.reset();
   ledGreen.reset();
   ledRed.reset();
-
 }
-
+// In der draw werden die angezeigten LED´s beim drücken gezeichnet und die Anderen resetet.
 public void draw() {
   switch(ledCol) {
   case 0:
@@ -87,7 +88,7 @@ public void draw() {
   }
 }
 int ledCol=4;
-
+// Kommunikation mit dem Arduino.
 void serialEvent(Serial myPort) {
 
   String recv = myPort.readStringUntil('\n');
