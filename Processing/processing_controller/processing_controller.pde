@@ -155,7 +155,7 @@ void serialEvent(Serial myPort) {
       println("true");
       ledCol = 3;
     }
-    println("String recived");
+   // println("String recived");
   }
 }
 void initPlayerMode(int Player) {
@@ -179,6 +179,21 @@ void initPlayerMode(int Player) {
     println("Error");
   }
 }
+
+void initPvP(){
+    myPort.write('p');
+}
+
+
+
+
+
+
+
+
+
+
+
 void addScore() {
   PlayerScore[playerControl] = PlayerScore[playerControl] + 1;
   drawScore();

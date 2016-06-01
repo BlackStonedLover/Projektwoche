@@ -80,7 +80,7 @@ public void b_fourPlayer_click1(GButton source, GEvent event) { //_CODE_:b_fourP
 
 public void b_PvP_click1(GButton source, GEvent event) { //_CODE_:b_PvP:540584:
   println("button5 - GButton >> GEvent." + event + " @ " + millis());
-  
+  initPvP();
 } //_CODE_:b_PvP:540584:
 
 
