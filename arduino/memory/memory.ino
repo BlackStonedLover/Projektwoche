@@ -59,18 +59,20 @@ void setup() {
   pinMode(speakerOut, OUTPUT);
 
 
-  getRndNo();
+
 }
+void startGameRnd(){
+  getRndNo();
+  }
 
 void loop() {
-  String recv = Serial.readString();
-
-  delay(100);
-
-
+ if (Serial.available() > 0) {
+      char gameStart = Serial.read();
+      if (gameStart == 's') {
+        startGameRnd();
 }
-
-
+ }
+}
 /**
    In dieser Methode wird das Array lightsToKlick mit 10 zufälligen Werten befüllt
 */
@@ -137,7 +139,7 @@ void userInput() {
   /**
      While Schleife solange noch Farben offen sind.
   */
-  while (Counter < level) {
+  while (Counter <= level) {
     if (Serial.available() > 0) {
       char ledState = Serial.read();
       if (ledState == '1') {
@@ -217,7 +219,7 @@ void userInput() {
       Counter++;
     }
   }
-  if (checkForGameover(Counter, 4))
+  if (checkForGameover(Counter, 3))
     WinGame();
 
 }
@@ -255,24 +257,24 @@ void LED(int LedId) {
    Diese Methode wird im Falle einer Niederlage ausgeführt
 */
 void LoseGame() {
-  Serial.println("Lose Game");
+
     PlaySoundDaDa();
-  for (int i = 0; i < 30; i++) {
+  for (int i = 0; i < 5; i++) {
     digitalWrite(LEDred, HIGH);
     delay(1000);
     digitalWrite(LEDred, LOW);
     delay(1000);
   }
-
+  Serial.println("_lose");
   // break;
 }
 /**
    Diese Methode wird im Falle des Gewinns ausgeüfhrt
 */
 void WinGame() {
-  Serial.println("Win Game");
 
-  for (int i = 0; i < 30; i++) {
+
+  for (int i = 0; i < 10; i++) {
     digitalWrite(LEDred, HIGH);
     digitalWrite(LEDgreen , LOW);
     digitalWrite(LEDyellow, LOW);
@@ -290,6 +292,7 @@ void WinGame() {
     digitalWrite(LEDblue, LOW);
     delay(300);
   }
+    Serial.println("_win");
 }
 
 

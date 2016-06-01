@@ -25,7 +25,7 @@ class Led {
     ellipse(x, y, Radius, Radius);
   }
 }
-
+int[] PlayerScore = new int[4];
 
 Led ledBlue = new Led(50, 0, 0, 255);
 Led ledYellow = new Led (110, 255, 255, 0);
@@ -47,7 +47,6 @@ public void setup() {
   ledYellow.reset();
   ledGreen.reset();
   ledRed.reset();
-
 }
 
 public void draw() {
@@ -85,14 +84,41 @@ public void draw() {
   default :
     //println("error");
   }
+  switch(loseControl) {
+  case 1:
+      loseControl =0;
+    lose();
+
+    break;
+  default:
+    println("Error Lose Control");
+  }
+  
+    switch(winControl) {
+  case 1:
+      winControl =0;
+    addScore();
+
+    break;
+  default:
+    println("Error Win Control");
+  }
 }
 int ledCol=4;
-
+int loseControl =0;
+int winControl = 0;
+int playerControl =0;
 void serialEvent(Serial myPort) {
 
   String recv = myPort.readStringUntil('\n');
   println(recv);
   if (recv != null) {
+    if (recv.trim().equals("_lose")) {
+      loseControl =1;
+    }
+      if (recv.trim().equals("_win")) {
+      winControl =1;
+    }
 
     if (recv.trim().equals("_red")) {
       println("true");
@@ -113,8 +139,73 @@ void serialEvent(Serial myPort) {
     println("String recived");
   }
 }
-
-
+void initPlayerMode(int Player) {
+  switch(Player) {
+  case 1:
+  playerControl =5;
+    myPort.write('s');
+    break;
+  case 2:
+    myPort.write('s');
+    break;
+  case 3:
+    myPort.write('s');
+    break;
+  case 4:
+    myPort.write('s');
+    break;
+  default: 
+    println("Error");
+  }
+}
+void addScore() {
+  PlayerScore[playerControl] += 1;
+  myPort.write('s');
+}
+void lose() {
+  switch(playerControl) {
+  case 1:
+    playerControl = 2; 
+    PlayerControl();
+    ;
+    break;
+  case 2:
+    playerControl = 3; 
+    PlayerControl();
+    break;
+  case 3:
+    playerControl = 4; 
+    PlayerControl();
+    break;
+  case 4:
+    playerControl = 1; 
+    PlayerControl();
+    break;
+    case 5:
+    myPort.write('s'); 
+    break;
+  default:
+    println("Error PlayerControl");
+  }
+}
+void PlayerControl() {
+  switch(playerControl) {
+  case 1:
+    myPort.write('s'); 
+    break;
+  case 2:
+    myPort.write('s'); 
+    break;
+  case 3:
+    myPort.write('s');
+    break;
+  case 4:
+    myPort.write('s'); 
+    break;
+  default:
+    println("Error PlayerControl");
+  }
+}
 
 
 
