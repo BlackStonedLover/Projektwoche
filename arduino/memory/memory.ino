@@ -105,7 +105,6 @@ void displayLights() {
       case 0:
         Serial.println("_blue");
         LED(LEDblue);
-
         break;
       case 1:
         Serial.println("_red");
@@ -238,7 +237,7 @@ void userInput() {
         Counter++;
     }
   }
-  if (!checkForGameover(Counter,10))
+  if (checkForGameover(Counter,10))
     WinGame();
 
 }
@@ -296,7 +295,7 @@ void LoseGame() {
 void WinGame() {
 
 
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 3; i++) {
     digitalWrite(LEDred, HIGH);
     digitalWrite(LEDgreen , LOW);
     digitalWrite(LEDyellow, LOW);

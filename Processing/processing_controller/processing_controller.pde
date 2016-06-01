@@ -54,8 +54,19 @@ public void setup() {
   ledGreen.reset();
   ledRed.reset();
 }
+void drawScore(){
+background(255);
+    println(playerControl);
+  label1.setText("Player 1: " + PlayerScore[0]);
+  label2.setText("Player 2 : " + PlayerScore[1]);
+  label3.setText("Player 3 : " + PlayerScore[2]);
+  label4.setText("Player 4 : " + PlayerScore[3]);
+  
+}
 // In der draw werden die angezeigten LED´s beim drücken gezeichnet und die Anderen resetet.
 public void draw() {
+
+  
   switch(ledCol) {
   case 0:
     ledRed.zeichnen();
@@ -92,17 +103,17 @@ public void draw() {
   }
   switch(loseControl) {
   case 1:
-      loseControl =0;
+    loseControl =0;
     lose();
 
     break;
   default:
     //println("Error Lose Control");
   }
-  
-    switch(winControl) {
+
+  switch(winControl) {
   case 1:
-      winControl =0;
+    winControl =0;
     addScore();
 
     break;
@@ -121,11 +132,11 @@ void serialEvent(Serial myPort) {
   String recv = myPort.readStringUntil('\n');
   println(recv);
   if (recv != null) {
-    
+
     if (recv.trim().equals("_lose")) {
       loseControl =1;
     }
-      if (recv.trim().equals("_win")) {
+    if (recv.trim().equals("_win")) {
       winControl =1;
     }
 
@@ -151,7 +162,7 @@ void serialEvent(Serial myPort) {
 void initPlayerMode(int Player) {
   switch(Player) {
   case 1:
-  playerControl =5;
+    playerControl =5;
     myPort.write('s');
     break;
   case 2:
@@ -169,12 +180,14 @@ void initPlayerMode(int Player) {
 }
 void addScore() {
   PlayerScore[playerControl] = PlayerScore[playerControl] + 1;
+  drawScore();
   myPort.write('s');
 }
 void lose() {
   switch(playerControl) {
   case 1:
     playerControl = 2; 
+    println( "Player Control" +playerControl);
     PlayerControl();
     ;
     break;
@@ -183,14 +196,20 @@ void lose() {
     PlayerControl();
     break;
   case 3:
+
     playerControl = 4; 
     PlayerControl();
     break;
   case 4:
+
     playerControl = 1; 
     PlayerControl();
     break;
-   case 5:
+  case 5:
+    label1.setText("Player 1 : " + PlayerScore[playerControl]);
+    label2.setText(" " );
+    label3.setText(" " );
+    label4.setText(" " );
     println("Lose case 5 start new");
     myPort.write('s'); 
     break;

@@ -13,7 +13,7 @@
  * Do not rename this tab!
  * =========================================================
  */
-// Bei Button Klick schreibe dem Arduino über myPort 'dieInfo' und zeichne dementsprechend die LED und resete die anderen 
+
 public void b_blue_click(GButton source, GEvent event) { //_CODE_:b_blue:614671:
   println("b_blue - GButton >> GEvent." + event + " @ " + millis());
   myPort.write('0');
@@ -107,6 +107,18 @@ public void createGUI(){
   b_yellow.setText("Yellow LED");
   b_yellow.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
   b_yellow.addEventHandler(this, "b_yellow_click");
+  label1 = new GLabel(this, 25, 198, 80, 20);
+  label1.setText("Player 1: " + PlayerScore[playerControl]);
+  label1.setOpaque(false);
+  label2 = new GLabel(this, 25, 223, 80, 20);
+  label2.setText("Player 2");
+  label2.setOpaque(false);
+  label3 = new GLabel(this, 24, 253, 80, 20);
+  label3.setText("Player 3");
+  label3.setOpaque(false);
+  label4 = new GLabel(this, 24, 279, 80, 20);
+  label4.setText("Player 4");
+  label4.setOpaque(false);
   hotSeat = GWindow.getWindow(this, "HotSeat", 0, 0, 300, 120, JAVA2D);
   hotSeat.noLoop();
   hotSeat.addDrawHandler(this, "win_draw1");
@@ -134,6 +146,10 @@ GButton b_blue;
 GButton b_red; 
 GButton b_green; 
 GButton b_yellow; 
+GLabel label1; 
+GLabel label2; 
+GLabel label3; 
+GLabel label4; 
 GWindow hotSeat;
 GButton b_onePlayer; 
 GButton b_twoPlayer; 
