@@ -13,7 +13,7 @@
  * Do not rename this tab!
  * =========================================================
  */
-
+// Bei Button Klick schreibe dem Arduino über myPort 'dieInfo' und zeichne dementsprechend die LED und resete die anderen 
 public void b_blue_click(GButton source, GEvent event) { //_CODE_:b_blue:614671:
   println("b_blue - GButton >> GEvent." + event + " @ " + millis());
   myPort.write('0');
