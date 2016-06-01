@@ -54,19 +54,18 @@ public void setup() {
   ledGreen.reset();
   ledRed.reset();
 }
-void drawScore(){
-background(255);
-    println(playerControl);
+void drawScore() {
+  background(255);
+  println(playerControl);
   label1.setText("Player 1: " + PlayerScore[0]);
   label2.setText("Player 2 : " + PlayerScore[1]);
   label3.setText("Player 3 : " + PlayerScore[2]);
   label4.setText("Player 4 : " + PlayerScore[3]);
-  
 }
 // In der draw werden die angezeigten LED´s beim drücken gezeichnet und die Anderen resetet.
 public void draw() {
 
-  
+
   switch(ledCol) {
   case 0:
     ledRed.zeichnen();
@@ -166,9 +165,11 @@ void initPlayerMode(int Player) {
     myPort.write('s');
     break;
   case 2:
+  twoplayer = true;
     myPort.write('s');
     break;
   case 3:
+  threeplayer = true;
     myPort.write('s');
     break;
   case 4:
@@ -183,33 +184,37 @@ void addScore() {
   drawScore();
   myPort.write('s');
 }
+boolean twoplayer = false;
+boolean threeplayer = false;
+
 void lose() {
+  println("Ich bin in der Lose methode");
   switch(playerControl) {
-  case 1:
-    playerControl = 2; 
+  case 0:
+    playerControl = 1; 
     println( "Player Control" +playerControl);
     PlayerControl();
-    ;
+    break;
+  case 1:
+  if(twoplayer)
+  playerControl =0;
+  else
+    playerControl = 2; 
+    PlayerControl();
     break;
   case 2:
+if(threeplayer)
+playerControl=0;
+else
     playerControl = 3; 
     PlayerControl();
     break;
   case 3:
 
-    playerControl = 4; 
-    PlayerControl();
-    break;
-  case 4:
-
     playerControl = 1; 
     PlayerControl();
     break;
   case 5:
-    label1.setText("Player 1 : " + PlayerScore[playerControl]);
-    label2.setText(" " );
-    label3.setText(" " );
-    label4.setText(" " );
     println("Lose case 5 start new");
     myPort.write('s'); 
     break;
@@ -219,6 +224,9 @@ void lose() {
 }
 void PlayerControl() {
   switch(playerControl) {
+    case 0:
+    myPort.write('s');
+    break;
   case 1:
     myPort.write('s'); 
     break;

@@ -137,7 +137,7 @@ void displayLights() {
 void userInput() {
   // Counter auf 0 init.
   int Counter = 0;
-
+  boolean lose = false;
   /**
      While Schleife solange noch Farben offen sind.
   */
@@ -148,6 +148,7 @@ void userInput() {
         LED(LEDred);
         if (checkForGameover(Counter, 1)) {
           LoseGame();
+          lose = true;
            break;
         }
         else
@@ -157,6 +158,7 @@ void userInput() {
         LED(LEDblue);
         if (checkForGameover(Counter, 0)) {
           LoseGame();
+          lose = true;
            break;
         }
         else
@@ -166,6 +168,7 @@ void userInput() {
         LED(LEDgreen);
         if (checkForGameover(Counter, 2)) {
           LoseGame();
+          lose = true;
            break;
         }
         else
@@ -175,6 +178,7 @@ void userInput() {
         LED(LEDyellow);
         if (checkForGameover(Counter, 3)) {
           LoseGame();
+          lose = true;
            break;
         }
         else
@@ -191,6 +195,7 @@ void userInput() {
       //Ruft Methode auf um die richtigkeit zu überprüfen.
       if (checkForGameover(Counter, 0)) {
         LoseGame();
+        lose = true;
         break;
       }
       else
@@ -204,6 +209,7 @@ void userInput() {
       //Ruft Methode auf um die richtigkeit zu überprüfen.
       if (checkForGameover(Counter, 1)) {
         LoseGame();
+        lose = true;
          break;
       }
       else
@@ -217,6 +223,7 @@ void userInput() {
       //Ruft Methode auf um die richtigkeit zu überprüfen.
       if (checkForGameover(Counter, 2)) {
         LoseGame();
+        lose = true;
          break;
       }
       else
@@ -231,13 +238,15 @@ void userInput() {
       //Ruft Methode auf um die richtigkeit zu überprüfen.
       if (checkForGameover(Counter, 3)) {
         LoseGame();
+        lose = true;
          break;
       }
       else
         Counter++;
     }
+   
   }
-  if (checkForGameover(Counter,10))
+  if (!lose)
     WinGame();
 
 }
