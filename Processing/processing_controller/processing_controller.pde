@@ -28,7 +28,7 @@ class Led {
   }
 }
 
-int[] PlayerScore = new int[4];
+int[] PlayerScore = new int[6];
 
 
 // Anlegen der neuen LED´s 
@@ -97,7 +97,7 @@ public void draw() {
 
     break;
   default:
-    println("Error Lose Control");
+    //println("Error Lose Control");
   }
   
     switch(winControl) {
@@ -107,19 +107,21 @@ public void draw() {
 
     break;
   default:
-    println("Error Win Control");
+    //println("Error Win Control");
   }
 }
 int ledCol=4;
 int loseControl =0;
 int winControl = 0;
 int playerControl =0;
+
 // Kommunikation mit dem Arduino.
 void serialEvent(Serial myPort) {
 
   String recv = myPort.readStringUntil('\n');
   println(recv);
   if (recv != null) {
+    
     if (recv.trim().equals("_lose")) {
       loseControl =1;
     }
@@ -166,7 +168,7 @@ void initPlayerMode(int Player) {
   }
 }
 void addScore() {
-  PlayerScore[playerControl] += 1;
+  PlayerScore[playerControl] = PlayerScore[playerControl] + 1;
   myPort.write('s');
 }
 void lose() {
@@ -188,7 +190,8 @@ void lose() {
     playerControl = 1; 
     PlayerControl();
     break;
-    case 5:
+   case 5:
+    println("Lose case 5 start new");
     myPort.write('s'); 
     break;
   default:

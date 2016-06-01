@@ -1,7 +1,7 @@
 
 #include "pitches.h"
-#define levelsize 5
-int level = 5;
+#define levelsize 2
+int level = 2;
 int melody[] = {
   NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4
 };
@@ -10,17 +10,17 @@ int melody[] = {
 int noteDurations[] = {
   4, 8, 8, 4, 4, 4, 4, 4
 };
-/**
+/*****************
    LED Output
-*/
+******************/
 int LEDblue = 9;
 int LEDred = 2;
 int LEDgreen = 4;
 int LEDyellow = 6;
 
-/**
+/****************
    Tasten INPUT
-*/
+****************/
 int Tblue = 10;
 int Tred = 3;
 int Tgreen = 5;
@@ -42,7 +42,9 @@ int TonHigh = 0;
 long randomNumber;
 int lightsToKlick[levelsize];
 //int * lightsToKlick[] = (int*) malloc(sizeof(int)*level);
-
+/*******************************
+   Setup
+ ******************************/
 void setup() {
   // Set serial out if we want debugging
   Serial.begin(9600);
@@ -61,17 +63,18 @@ void setup() {
 
 
 }
-void startGameRnd(){
+void startGameRnd() {
   getRndNo();
-  }
+}
 
 void loop() {
- if (Serial.available() > 0) {
-      char gameStart = Serial.read();
-      if (gameStart == 's') {
-        startGameRnd();
-}
- }
+  if (Serial.available() > 0) {
+    char gameStart = Serial.read();
+    if (gameStart == 's') {
+      Serial.println("Start new Game");
+      startGameRnd();
+    }
+  }
 }
 /**
    In dieser Methode wird das Array lightsToKlick mit 10 zufälligen Werten befüllt
@@ -139,36 +142,44 @@ void userInput() {
   /**
      While Schleife solange noch Farben offen sind.
   */
-  while (Counter <= level) {
+  while (Counter < level) {
     if (Serial.available() > 0) {
       char ledState = Serial.read();
       if (ledState == '1') {
         LED(LEDred);
         if (checkForGameover(Counter, 1)) {
           LoseGame();
+           break;
         }
-        Counter++;
+        else
+          Counter++;
       }
       if (ledState == '0') {
         LED(LEDblue);
         if (checkForGameover(Counter, 0)) {
           LoseGame();
+           break;
         }
-        Counter++;
+        else
+          Counter++;
       }
       if (ledState == '2') {
         LED(LEDgreen);
         if (checkForGameover(Counter, 2)) {
           LoseGame();
+           break;
         }
-        Counter++;
+        else
+          Counter++;
       }
       if (ledState == '3') {
         LED(LEDyellow);
         if (checkForGameover(Counter, 3)) {
           LoseGame();
+           break;
         }
-        Counter++;
+        else
+          Counter++;
       }
     }
 
@@ -181,8 +192,10 @@ void userInput() {
       //Ruft Methode auf um die richtigkeit zu überprüfen.
       if (checkForGameover(Counter, 0)) {
         LoseGame();
+        break;
       }
-      Counter++;
+      else
+        Counter++;
     }
     if (digitalRead(Tred) == HIGH) { // Rot wird überprüft
       TonHigh = 175;
@@ -192,8 +205,10 @@ void userInput() {
       //Ruft Methode auf um die richtigkeit zu überprüfen.
       if (checkForGameover(Counter, 1)) {
         LoseGame();
+         break;
       }
-      Counter++;
+      else
+        Counter++;
     }
     if (digitalRead(Tgreen) == HIGH) { // Grün wird überprüft
       TonHigh = 4978;
@@ -203,8 +218,10 @@ void userInput() {
       //Ruft Methode auf um die richtigkeit zu überprüfen.
       if (checkForGameover(Counter, 2)) {
         LoseGame();
+         break;
       }
-      Counter++;
+      else
+        Counter++;
     }
 
     if (digitalRead(Tyellow) == HIGH) { //Gelb wird überprüft
@@ -215,11 +232,13 @@ void userInput() {
       //Ruft Methode auf um die richtigkeit zu überprüfen.
       if (checkForGameover(Counter, 3)) {
         LoseGame();
+         break;
       }
-      Counter++;
+      else
+        Counter++;
     }
   }
-  if (checkForGameover(Counter, 3))
+  if (!checkForGameover(Counter,10))
     WinGame();
 
 }
@@ -230,6 +249,13 @@ void userInput() {
     return false => richtig
     return true => GameOver
 */
+bool winGame(int aktIndex) {
+  if (sizeof(lightsToKlick) > aktIndex) {
+    Serial.println("Win");
+    return true;
+  }
+  return false;
+}
 bool checkForGameover(int aktIndex, int LED) {
   if (lightsToKlick[aktIndex] != LED)
     return true;
@@ -258,14 +284,10 @@ void LED(int LedId) {
 */
 void LoseGame() {
 
-    PlaySoundDaDa();
-  for (int i = 0; i < 5; i++) {
-    digitalWrite(LEDred, HIGH);
-    delay(1000);
-    digitalWrite(LEDred, LOW);
-    delay(1000);
-  }
+  PlaySoundDaDa();
+
   Serial.println("_lose");
+
   // break;
 }
 /**
@@ -292,13 +314,25 @@ void WinGame() {
     digitalWrite(LEDblue, LOW);
     delay(300);
   }
-    Serial.println("_win");
+  digitalWrite(LEDgreen , LOW);
+  digitalWrite(LEDyellow, LOW);
+  Serial.println("_win");
 }
 
 
 void PlaySoundDaDa() {
+
   for (int thisNote = 0; thisNote < 8; thisNote++) {
 
+    if (0 == thisNote % 2) {
+      digitalWrite(LEDblue, LOW);
+      digitalWrite(LEDred, HIGH);
+    }
+    else  {
+      digitalWrite(LEDblue, HIGH);
+      digitalWrite(LEDred, LOW);
+
+    }
     // to calculate the note duration, take one second
     // divided by the note type.
     //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
@@ -311,5 +345,8 @@ void PlaySoundDaDa() {
     delay(pauseBetweenNotes);
     // stop the tone playing:
     noTone(speakerOut);
+
   }
+  digitalWrite(LEDred, LOW);
+  digitalWrite(LEDblue, LOW);
 }
