@@ -1,4 +1,13 @@
-
+/**
+ * Dies ist das Spiel Momry in dem man in verschiedenen Spielmodis Farben nachspielen muss um zu gewinnen.
+ * Folgende Spielmodi sind verfügbar:
+ * PvP , Hot Seat, Soloplayer
+ * 
+ * Mitwirkende: Christian Schulz, Konstantin Kühn , Julian 
+ * 
+ * Bei Fragen bitte einfach nachfragen. Code sollte funktionieren, wurde vor Ende getestet. 
+ * Programm wurde nach ermessen kommentiert. 
+ */
 #include "pitches.h"
 #define levelsize 100
 int level = 2;
@@ -26,22 +35,25 @@ int Tred = 3;
 int Tgreen = 5;
 int Tyellow = 8;
 
-/**
+/****************
    Speaker Output
-*/
+******************/
 int speakerOut = 11;
 
-/**
+/*****************
    Tonhöhe init.
-*/
+******************/
 int TonHigh = 0;
 
-/**
+/*****************************
    Array und Random Number
-*/
+******************************/
 long randomNumber;
 //int lightsToKlick[levelsize];
 int * lightsToKlick = (int*) malloc(sizeof(int) * levelsize);
+
+
+
 /*******************************
    Setup
  ******************************/
@@ -65,6 +77,10 @@ void setup() {
 }
 
 
+/************************************************
+    Loop überprüft auf Eingabe von Processing
+ ************************************************/
+
 void loop() {
   if (Serial.available() > 0) {
     char gameStart = Serial.read();
@@ -79,16 +95,22 @@ void loop() {
     }
   }
 }
-/**
-   In dieser Methode wird das Array lightsToKlick mit 10 zufälligen Werten befüllt
-*/
+
+
+
+/********************************************************************************
+ *********************************************************************************
+                                 PvP Modus
+ *********************************************************************************   
+ *********************************************************************************
+**********************************************************************************/
 void startPvP() {
   generateArrayProces();
 }
 
-/**
-   Es wird in Processing dasArray gefüllt
-*/
+/**********************************************
+   Es wird in Processing das Array gefüllt
+***********************************************/
 void generateArrayProces() {
   int i = 0;
   int actA = 0;
@@ -108,7 +130,6 @@ void generateArrayProces() {
         i++;
 
       }
-
       if (ledState == '2') {
         LED(LEDgreen);
         lightsToKlick[i] = 2;
@@ -127,9 +148,9 @@ void generateArrayProces() {
   }
   userInputArduino();
 }
-/**
+/******************************************************
    Der Nutzer muss in Arduino die Eingabe tätigen
-*/
+********************************************************/
 void userInputArduino() {
   int Counter = 0;
   boolean lose = false;
@@ -203,9 +224,9 @@ void userInputArduino() {
 }
 
 
-/**
-   An Arduino wird der Array mit Werten gefüllt
-*/
+/******************************************************************************************
+   An Arduino wird das Array mit Werten gefüllt
+******************************************************************************************/
 void generateArrayArduino() {
   int i = 0;
   int actA = 0;
@@ -248,9 +269,9 @@ void generateArrayArduino() {
 
   userInputProcess();
 }
-/**
-   DEr Benutzer muss in Processing eine Eingabe tätigen
-*/
+/*********************************************************************************
+   Der Benutzer muss in Processing eine Eingabe tätigen
+*********************************************************************************/
 void userInputProcess() {
   int Counter = 0;
   boolean lose = false;
@@ -304,24 +325,46 @@ void userInputProcess() {
   if (!lose)
     WinPvPGame();
 
-  generateArrayProces();
+  generateArrayProces();  // Processing ist wieder erneut mit einer Eingabe dran.
 }
 
 
+/*******************************************
+   Wird ausgeführt im Falle einer Niederlage und
+   sendet an Processing ein "_losePvP"
+********************************************/
+void LosePvPGame() {
+
+  PlaySoundDaDa();
+  level = 2;
+  Serial.println("_losePvP");
+
+  // break;
+}
+/****************************************
+   Wird ausgeführt im Falle eines sieges und sendet an 
+   Processing "_winPvP"
+******************************************/
+void WinPvPGame() {
+  level += 1;
+  PlayWinSound();
+  Serial.println("_winPvP");
+}
 
 
+/*******************************************************************************
+ *******************************************************************************
 
+          Zufällig Generierte Zahlen 
+          für Hot Seat und Soloplayer
 
-
-
-
-
-
-
-
+/********************************************************************************
+   In dieser Methode wird das Array lightsToKlick mit 10 zufälligen Werten befüllt
+**********************************************************************************/
 void startGameRnd() {
   getRndNo();
 }
+
 void getRndNo() {
   Serial.println("Folgende Folge wurde generiert:");
   for (int i = 0; i < level; i++) {
@@ -333,7 +376,7 @@ void getRndNo() {
   displayLights();
 }
 
-/**
+/**********************************
    Zeige die ausgewählten LEDS an.
    Hierbei bitte bachten:
    Blau == 0;
@@ -341,7 +384,7 @@ void getRndNo() {
    Grün ==2;
    Gelb ==3;
    Keine der oben genannten => Error
-*/
+************************************/
 void displayLights() {
   for (int i = 0; i < level; i++) {
     switch (lightsToKlick[i]) {
@@ -374,25 +417,25 @@ void displayLights() {
   userInput();
 }
 
-/**
+/*****************************************************************************************
    In dieser Methode muss der Nutzer eine Eingabe machen. Solange der Counter noch nicht
-   alle 10 Farben gezählt hat wird auf die nächste Eingabe gewartet.
-*/
+   alle X Farben gezählt hat wird auf die nächste Eingabe erwartet.
+*****************************************************************************************/
 void userInput() {
   // Counter auf 0 init.
   int Counter = 0;
   boolean lose = false;
-  /**
+  /**********************************************
      While Schleife solange noch Farben offen sind.
-  */
+  ***********************************************/
   while (Counter < level) {
-    if (Serial.available() > 0) {
-      char ledState = Serial.read();
-      if (ledState == '1') {
+    if (Serial.available() > 0) { // Eine Nachricht vorhanden
+      char ledState = Serial.read();  // Speicher in eine Variable
+      if (ledState == '1') { // Überprüfe ob eine 1  übergeben wurde
         LED(LEDred);
         if (checkForGameover(Counter, 1)) {
-          LoseGame();
-          lose = true;
+          LoseGame();     // Wechsle zur Lose Methode
+          lose = true;    // Setze bool auf true um nicht win abzuspielen nach dem verlassen der while schleife
           break;
         }
         else
@@ -492,9 +535,11 @@ void userInput() {
 
   }
   if (!lose)
-    WinGame();
+    WinGame();  
 
 }
+
+
 /**
    Überprüft ob das Spiel vorbei ist
    @aktIndex int der aktuelle Index ( Counter)
@@ -502,13 +547,6 @@ void userInput() {
     return false => richtig
     return true => GameOver
 */
-bool winGame(int aktIndex) {
-  if (sizeof(lightsToKlick) > aktIndex) {
-    Serial.println("Win");
-    return true;
-  }
-  return false;
-}
 bool checkForGameover(int aktIndex, int LED) {
   if (lightsToKlick[aktIndex] != LED)
     return true;
@@ -517,9 +555,9 @@ bool checkForGameover(int aktIndex, int LED) {
 }
 
 
-/**
+/***************************************************************************************************************
    Diese Methode lässt eine LED aufleuchten mit einem Ton und  erlöscht diese wieder aufgrund der Übergebenen ID
-*/
+****************************************************************************************************************/
 void LED(int LedId) {
 
   //Serial.println("LED mit der ID leuchtet");
@@ -532,44 +570,34 @@ void LED(int LedId) {
   digitalWrite(LedId, LOW);
 }
 
-/**
+/***************************************************************
    Diese Methode wird im Falle einer Niederlage ausgeführt
-*/
+************************************************************/
 void LoseGame() {
-
   PlaySoundDaDa();
-
-  Serial.println("_lose");
-
+  Serial.println("_lose");      // Sende ein "_lose" an Processing
   // break;
 }
 
-void LosePvPGame() {
 
-  PlaySoundDaDa();
-  level = 2;
-  Serial.println("_losePvP");
-
-  // break;
-}
 /**
 
 
-  /**
+  /***************************************************
    Diese Methode wird im Falle des Gewinns ausgeüfhrt
-*/
+********************************************************/
 void WinGame() {
-
-
   PlayWinSound();
-  Serial.println("_win");
+  Serial.println("_win");  // Sende ein "_win" an Processing
 }
 
-void WinPvPGame() {
-  level += 1;
-  PlayWinSound();
-  Serial.println("_winPvP");
-}
+/**********************************************************************
+ **********************************************************************
+ **********************************************************************
+                           Musik Methoden
+**********************************************************************
+ **********************************************************************
+ **********************************************************************/
 
 
 void PlayWinSound() {
