@@ -3,7 +3,7 @@
  * Folgende Spielmodi sind verfügbar:
  * PvP , Hot Seat, Soloplayer
  * 
- * Mitwirkende: Christian Schulz, Konstantin Kühn , Julian 
+ * Mitwirkende: Christian Schulz, Konstantin Kühn , Julian Roth
  * 
  * Bei Fragen bitte einfach nachfragen. Code sollte funktionieren, wurde vor Ende getestet. 
  * Programm wurde nach ermessen kommentiert. 
